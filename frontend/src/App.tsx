@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './components/Toast';
 import PublicLayout from './layouts/PublicLayout';
@@ -33,7 +33,7 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardRedirect />} />
 
             {/* Student Routes */}
-            <Route path="/student" element={<DashboardLayout allowedRoles={['STUDENT']}><div /></DashboardLayout>}>
+            <Route path="/student" element={<DashboardLayout allowedRoles={['STUDENT']}><Outlet /></DashboardLayout>}>
               <Route path="dashboard" element={<StudentDashboard />} />
               <Route path="report-issue" element={<ReportIssue />} />
               <Route path="issues" element={<StudentIssues />} />
@@ -41,14 +41,14 @@ export default function App() {
             </Route>
 
             {/* Staff Routes */}
-            <Route path="/staff" element={<DashboardLayout allowedRoles={['STAFF']}><div /></DashboardLayout>}>
+            <Route path="/staff" element={<DashboardLayout allowedRoles={['STAFF']}><Outlet /></DashboardLayout>}>
               <Route path="dashboard" element={<StaffDashboard />} />
               <Route path="issues" element={<StaffIssues />} />
               <Route path="issues/:id" element={<IssueDetails />} />
             </Route>
 
             {/* Admin Routes */}
-            <Route path="/admin" element={<DashboardLayout allowedRoles={['ADMIN']}><div /></DashboardLayout>}>
+            <Route path="/admin" element={<DashboardLayout allowedRoles={['ADMIN']}><Outlet /></DashboardLayout>}>
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="issues" element={<AdminIssues />} />
               <Route path="issues/:id" element={<IssueDetails />} />
