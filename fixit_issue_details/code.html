@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FixIt - Issue Submitted</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#45464d",
+                        "primary": "#000000",
+                        "inverse-surface": "#303032",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#98805d",
+                        "tertiary": "#000000",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#0d1c2f",
+                        "outline-variant": "#c6c6cd",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#131b2e",
+                        "outline": "#76777d",
+                        "surface-bright": "#fcf8fa",
+                        "background": "#fcf8fa",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "on-background": "#1b1b1d",
+                        "on-primary-container": "#7c839b",
+                        "surface-container-highest": "#e4e2e4",
+                        "tertiary-container": "#271901",
+                        "on-secondary-fixed-variant": "#3a485c",
+                        "surface-dim": "#dcd9db",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f6f3f5",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface-variant": "#e4e2e4",
+                        "on-surface": "#1b1b1d",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "surface-container": "#f0edef",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "secondary-container": "#d5e3fd",
+                        "on-secondary-container": "#57657b",
+                        "tertiary-fixed": "#fcdeb5",
+                        "secondary-fixed": "#d5e3fd",
+                        "on-tertiary-fixed": "#271901",
+                        "secondary-fixed-dim": "#b9c7e0",
+                        "secondary": "#515f74",
+                        "surface": "#fcf8fa",
+                        "surface-container-high": "#eae7e9",
+                        "primary-container": "#131b2e",
+                        "inverse-primary": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "container-max": "1280px",
+                        "md": "16px",
+                        "margin-mobile": "16px",
+                        "xl": "40px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #fcf8fa; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased flex">
+<!-- Content Area (Canvas) -->
+<main class="flex-1 min-h-screen bg-background p-4 md:p-8 overflow-y-auto">
+<div class="max-w-container-max mx-auto space-y-xl">
+<!-- Success State Section -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-8 text-center max-w-2xl mx-auto border border-surface-container-high relative overflow-hidden" id="success-state">
+<div class="absolute inset-0 bg-gradient-to-b from-surface-container-highest/20 to-transparent pointer-events-none"></div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-[64px] text-primary mb-4" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<h1 class="text-headline-lg font-headline-lg text-primary mb-2">Your issue has been reported.</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant mb-6">Thank you for keeping our campus safe.</p>
+<div class="bg-surface-container-low rounded-lg p-6 mb-8 text-left grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Issue ID</p>
+<p class="text-body-md font-body-md font-semibold text-primary">FIX-1042</p>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Priority</p>
+<div class="inline-flex items-center gap-1 bg-error-container text-on-error-container px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-[16px]">error</span>
+<span class="text-label-sm font-label-sm font-bold">CRITICAL</span>
+</div>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Score</p>
+<p class="text-body-md font-body-md text-primary font-bold">94/100</p>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Status</p>
+<p class="text-body-md font-body-md text-primary font-semibold">PENDING</p>
+</div>
+<div class="col-span-1 md:col-span-2">
+<p class="text-label-sm font-label-sm text-on-surface-variant">Factors</p>
+<p class="text-body-md font-body-md text-primary">High urgency, 150 people affected</p>
+</div>
+</div>
+<button class="bg-primary text-on-primary hover:bg-on-surface-variant transition-colors px-6 py-3 rounded-lg text-label-md font-label-md font-bold shadow-sm inline-flex items-center gap-2" onclick="document.getElementById('success-state').classList.add('hidden'); document.getElementById('details-state').classList.remove('hidden');">
+                        View Issue Details <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Issue Details Section -->
+<section class="hidden" id="details-state">
+<!-- TopNavBar (Simulated for intent clarity within focused view) -->
+<div class="flex items-center gap-4 mb-8">
+<button class="p-2 hover:bg-surface-container-highest rounded-full transition-colors inline-flex items-center justify-center text-on-surface-variant" onclick="document.getElementById('details-state').classList.add('hidden'); document.getElementById('success-state').classList.remove('hidden');">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div>
+<h2 class="text-headline-md font-headline-md font-bold text-primary">Water Pipe Leakage</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">FIX-1042</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Left Column: Details & Timeline -->
+<div class="lg:col-span-2 space-y-lg">
+<!-- Core Details Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-6 border-l-2 border-error">
+<h3 class="text-label-md font-label-md font-bold text-primary mb-4 border-b border-surface-container-high pb-2">Issue Details</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Category</p>
+<p class="text-body-md font-body-md flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">plumbing</span> Plumbing</p>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Location</p>
+<p class="text-body-md font-body-md flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">location_on</span> Hostel B</p>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Reported</p>
+<p class="text-body-md font-body-md">Today 2:34 PM</p>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Affected</p>
+<p class="text-body-md font-body-md flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">group</span> 150</p>
+</div>
+</div>
+</div>
+<!-- Status Timeline -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-6">
+<h3 class="text-label-md font-label-md font-bold text-primary mb-6">Status Timeline</h3>
+<div class="relative">
+<div class="absolute left-[15px] top-0 bottom-0 w-0.5 bg-surface-container-high z-0"></div>
+<div class="relative z-10 flex items-start gap-4 mb-6">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center border-4 border-surface-container-lowest shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-on-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">radio_button_checked</span>
+</div>
+<div>
+<p class="text-label-md font-label-md font-bold text-primary">PENDING</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Issue logged in the system.</p>
+</div>
+</div>
+<div class="relative z-10 flex items-start gap-4 mb-6 opacity-50">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border-4 border-surface-container-lowest shrink-0">
+<span class="material-symbols-outlined text-outline text-[16px]">person_add</span>
+</div>
+<div>
+<p class="text-label-md font-label-md font-bold text-on-surface">ASSIGNED</p>
+</div>
+</div>
+<div class="relative z-10 flex items-start gap-4 mb-6 opacity-50">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border-4 border-surface-container-lowest shrink-0">
+<span class="material-symbols-outlined text-outline text-[16px]">build</span>
+</div>
+<div>
+<p class="text-label-md font-label-md font-bold text-on-surface">IN PROGRESS</p>
+</div>
+</div>
+<div class="relative z-10 flex items-start gap-4 mb-6 opacity-50">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border-4 border-surface-container-lowest shrink-0">
+<span class="material-symbols-outlined text-outline text-[16px]">check_circle</span>
+</div>
+<div>
+<p class="text-label-md font-label-md font-bold text-on-surface">RESOLVED</p>
+</div>
+</div>
+<div class="relative z-10 flex items-start gap-4 opacity-50">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border-4 border-surface-container-lowest shrink-0">
+<span class="material-symbols-outlined text-outline text-[16px]">verified</span>
+</div>
+<div>
+<p class="text-label-md font-label-md font-bold text-on-surface">VERIFIED</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Priority Factors & Comments -->
+<div class="space-y-lg">
+<!-- Priority Factors Panel -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-6">
+<div class="flex items-center justify-between mb-4 pb-2 border-b border-surface-container-high">
+<h3 class="text-label-md font-label-md font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-error">analytics</span>
+                                    Priority Factors
+                                </h3>
+<span class="bg-error-container text-on-error-container text-[10px] font-bold px-2 py-0.5 rounded-full">CRITICAL</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-body-md font-body-md text-on-surface-variant">Urgency</span>
+<span class="text-label-md font-label-md font-bold text-error">High</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-md font-body-md text-on-surface-variant">Impact Area</span>
+<span class="text-label-md font-label-md font-bold text-primary">Hostel Block</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-md font-body-md text-on-surface-variant">Affected Persons</span>
+<span class="text-label-md font-label-md font-bold text-primary">~150</span>
+</div>
+<div class="pt-3 mt-3 border-t border-surface-container-high flex justify-between items-center">
+<span class="text-label-md font-label-md text-primary font-bold">Total Score</span>
+<span class="text-headline-md font-headline-md text-primary font-bold">94<span class="text-body-md text-on-surface-variant font-normal">/100</span></span>
+</div>
+</div>
+</div>
+<!-- Comments Section -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col h-[400px]">
+<div class="p-4 border-b border-surface-container-high shrink-0">
+<h3 class="text-label-md font-label-md font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">forum</span>
+                                    Comments &amp; Updates
+                                </h3>
+</div>
+<!-- Messages -->
+<div class="p-4 flex-1 overflow-y-auto space-y-4 bg-surface-container-low hide-scrollbar">
+<!-- Automated Message -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px] text-primary">smart_toy</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg rounded-tl-none shadow-sm text-body-md font-body-md text-primary">
+                                        Issue FIX-1042 automatically categorized as Plumbing and assigned Critical priority based on impact.
+                                        <div class="text-[10px] text-on-surface-variant mt-1 text-right">2:34 PM</div>
+</div>
+</div>
+</div>
+<!-- Input -->
+<div class="p-4 border-t border-surface-container-high bg-surface-container-lowest shrink-0 rounded-b-xl">
+<div class="flex gap-2 items-center">
+<input class="flex-1 border border-outline-variant rounded-md px-3 py-2 text-body-md font-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-background" placeholder="Add a comment..." type="text"/>
+<button class="bg-primary text-on-primary p-2 rounded-md hover:bg-on-surface-variant transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

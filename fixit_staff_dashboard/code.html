@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FixIt Staff Dashboard</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#45464d",
+                        "primary": "#000000",
+                        "inverse-surface": "#303032",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#98805d",
+                        "tertiary": "#000000",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#0d1c2f",
+                        "outline-variant": "#c6c6cd",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#131b2e",
+                        "outline": "#76777d",
+                        "surface-bright": "#fcf8fa",
+                        "background": "#fcf8fa",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "on-background": "#1b1b1d",
+                        "on-primary-container": "#7c839b",
+                        "surface-container-highest": "#e4e2e4",
+                        "tertiary-container": "#271901",
+                        "on-secondary-fixed-variant": "#3a485c",
+                        "surface-dim": "#dcd9db",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f6f3f5",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface-variant": "#e4e2e4",
+                        "on-surface": "#1b1b1d",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "surface-container": "#f0edef",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "secondary-container": "#d5e3fd",
+                        "on-secondary-container": "#57657b",
+                        "tertiary-fixed": "#fcdeb5",
+                        "secondary-fixed": "#d5e3fd",
+                        "on-tertiary-fixed": "#271901",
+                        "secondary-fixed-dim": "#b9c7e0",
+                        "secondary": "#515f74",
+                        "surface": "#fcf8fa",
+                        "surface-container-high": "#eae7e9",
+                        "primary-container": "#131b2e",
+                        "inverse-primary": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "container-max": "1280px",
+                        "md": "16px",
+                        "margin-mobile": "16px",
+                        "xl": "40px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen antialiased flex">
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex flex-col h-screen fixed left-0 top-0 p-4 gap-2 bg-surface dark:bg-inverse-surface border-r border-outline-variant w-64 z-50">
+<div class="mb-8 px-4 py-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">build</span>
+<div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary">FixIt Campus</h1>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Facilities Management</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container font-bold rounded-lg transition-transform duration-150 scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-label-md font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">report</span>
+<span class="text-label-md font-label-md">Report Issue</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-label-md font-label-md">My Issues</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">assignment_ind</span>
+<span class="text-label-md font-label-md">Assigned</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">task_alt</span>
+<span class="text-label-md font-label-md">Resolved</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<span class="text-label-md font-label-md">All Issues</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">error</span>
+<span class="text-label-md font-label-md">Critical</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-label-md font-label-md">Staff</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">category</span>
+<span class="text-label-md font-label-md">Categories</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-label-md font-label-md">Analytics</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-2 pt-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-md font-label-md">Profile</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar (Mobile) & Main Content Wrapper -->
+<div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 md:left-64 right-0 z-40 bg-surface dark:bg-inverse-surface shadow-sm h-16 flex justify-between items-center px-4 md:px-8">
+<div class="flex items-center md:hidden">
+<span class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary">FixIt</span>
+</div>
+<div class="hidden md:block">
+<h2 class="text-headline-md font-headline-md text-on-surface">Maintenance Dashboard</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 pt-20 pb-20 md:pb-8 px-4 md:px-8 max-w-container-max mx-auto w-full">
+<!-- Header Mobile -->
+<div class="md:hidden mb-6">
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Maintenance Dashboard</h1>
+</div>
+<!-- Statistics Grid -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+<!-- Stat Card: Assigned -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-2 border-primary flex flex-col justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant mb-2 uppercase tracking-wider">Assigned</span>
+<div class="flex items-end justify-between">
+<span class="text-display-lg font-display-lg text-primary">12</span>
+<span class="material-symbols-outlined text-primary mb-1 opacity-50">assignment_ind</span>
+</div>
+</div>
+<!-- Stat Card: Pending -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-2 border-tertiary-fixed-dim flex flex-col justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant mb-2 uppercase tracking-wider">Pending</span>
+<div class="flex items-end justify-between">
+<span class="text-display-lg font-display-lg text-on-surface">5</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim mb-1 opacity-50">pending</span>
+</div>
+</div>
+<!-- Stat Card: In Progress -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-2 border-secondary flex flex-col justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant mb-2 uppercase tracking-wider">In Progress</span>
+<div class="flex items-end justify-between">
+<span class="text-display-lg font-display-lg text-on-surface">4</span>
+<span class="material-symbols-outlined text-secondary mb-1 opacity-50">trending_up</span>
+</div>
+</div>
+<!-- Stat Card: Resolved -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-2 border-primary-fixed-dim flex flex-col justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant mb-2 uppercase tracking-wider">Resolved</span>
+<div class="flex items-end justify-between">
+<span class="text-display-lg font-display-lg text-on-surface">3</span>
+<span class="material-symbols-outlined text-primary-fixed-dim mb-1 opacity-50">task_alt</span>
+</div>
+</div>
+</section>
+<!-- Priority Issues List -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="p-6 border-b border-surface-container-high flex justify-between items-center">
+<h3 class="text-headline-md font-headline-md text-on-surface">Priority Issues</h3>
+<button class="text-label-md font-label-md text-primary flex items-center gap-1 hover:underline">
+                        View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="flex flex-col">
+<!-- Issue Item: Critical -->
+<div class="p-4 border-b border-surface-container-high hover:bg-surface-container-low transition-colors group flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-start gap-4 flex-1">
+<div class="mt-1 flex-shrink-0">
+<span class="bg-error-container text-on-error-container text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">Critical</span>
+</div>
+<div>
+<h4 class="text-body-lg font-body-lg text-on-surface font-semibold mb-1">Water Leakage</h4>
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">location_on</span> Hostel B
+                                    <span class="text-outline">|</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">speed</span> Score: <span class="font-bold text-error">94</span></span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-2 sm:mt-0">
+<button class="px-4 py-2 text-label-md font-label-md text-primary border border-outline-variant rounded-lg hover:bg-surface-container transition-colors">View</button>
+<button class="px-4 py-2 text-label-md font-label-md bg-primary text-on-primary rounded-lg hover:bg-on-primary-fixed transition-colors">Start Work</button>
+</div>
+</div>
+<!-- Issue Item: High -->
+<div class="p-4 border-b border-surface-container-high hover:bg-surface-container-low transition-colors group flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-start gap-4 flex-1">
+<div class="mt-1 flex-shrink-0">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">High</span>
+</div>
+<div>
+<h4 class="text-body-lg font-body-lg text-on-surface font-semibold mb-1">Electrical Fault</h4>
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">location_on</span> Block A
+                                    <span class="text-outline">|</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">speed</span> Score: <span class="font-bold text-on-tertiary-container">82</span></span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-2 sm:mt-0">
+<button class="px-4 py-2 text-label-md font-label-md text-primary border border-outline-variant rounded-lg hover:bg-surface-container transition-colors">View</button>
+<button class="px-4 py-2 text-label-md font-label-md bg-primary text-on-primary rounded-lg hover:bg-on-primary-fixed transition-colors">Start Work</button>
+</div>
+</div>
+<!-- Issue Item: Medium -->
+<div class="p-4 hover:bg-surface-container-low transition-colors group flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-start gap-4 flex-1">
+<div class="mt-1 flex-shrink-0">
+<span class="bg-secondary-container text-on-secondary-container text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">Medium</span>
+</div>
+<div>
+<h4 class="text-body-lg font-body-lg text-on-surface font-semibold mb-1">Broken Projector</h4>
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">location_on</span> Block C
+                                    <span class="text-outline">|</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">speed</span> Score: <span class="font-bold text-secondary">58</span></span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-2 sm:mt-0">
+<button class="px-4 py-2 text-label-md font-label-md text-primary border border-outline-variant rounded-lg hover:bg-surface-container transition-colors">View</button>
+<button class="px-4 py-2 text-label-md font-label-md bg-primary text-on-primary rounded-lg hover:bg-on-primary-fixed transition-colors">Start Work</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-inverse-surface shadow-[0_-4px_6px_-1px_rgba(15,23,42,0.05)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-4 py-1 scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-sm font-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors px-4 py-1 rounded-2xl" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<span class="text-label-sm font-label-sm mt-1">Issues</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors px-4 py-1 rounded-2xl" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="text-label-sm font-label-sm mt-1">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors px-4 py-1 rounded-2xl" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-sm font-label-sm mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

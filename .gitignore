@@ -1,0 +1,29 @@
+# Node
+node_modules/
+dist/
+.env
+.env.local
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+appsettings.Development.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Misc
+*.log
