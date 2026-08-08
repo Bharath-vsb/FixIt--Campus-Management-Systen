@@ -40,7 +40,7 @@ namespace backend.Controllers
         [HttpGet("staff")]
         public async Task<ActionResult> GetStaffStats()
         {
-            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userIdStr = GetUserId();
             if (!int.TryParse(userIdStr, out int userId)) return Unauthorized();
 
             var issues = await _context.Issues.Where(i => i.AssignedToId == userId).ToListAsync();

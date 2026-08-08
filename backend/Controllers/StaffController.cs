@@ -18,10 +18,17 @@ namespace backend.Controllers
             _context = context;
         }
 
+        private string? GetUserRole()
+        {
+            return User.FindFirst(ClaimTypes.Role)?.Value 
+                ?? User.FindFirst("role")?.Value 
+                ?? User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetAllStaff()
         {
-            var userRole = User.FindFirstValue(ClaimTypes.Role);
+            var userRole = GetUserRole();
             if (userRole != "ADMIN") return Forbid();
 
             var staffUsers = await _context.Users

@@ -21,12 +21,30 @@ namespace backend.Controllers
             _context = context;
         }
 
+        private string? GetUserRole()
+        {
+            return User.FindFirst(ClaimTypes.Role)?.Value 
+                ?? User.FindFirst("role")?.Value 
+                ?? User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
+        }
+
+        private string? GetUserId()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                ?? User.FindFirst("nameid")?.Value 
+                ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IssueDto>>> GetIssues([FromQuery] string? status)
         {
-            var userRole = User.FindFirstValue(ClaimTypes.Role);
-            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(userIdStr, out int userId)) return Unauthorized();
+            var userRole = GetUserRole();
+            var userIdStr = GetUserId();
+
+            if (string.IsNullOrEmpty(userRole) || !int.TryParse(userIdStr, out int userId))
+            {
+                return Unauthorized("Missing claims");
+            }
 
             var query = _context.Issues
                 .Include(i => i.ReportedBy)
@@ -68,8 +86,8 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            var userRole = User.FindFirstValue(ClaimTypes.Role);
-            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userRole = GetUserRole();
+            var userIdStr = GetUserId();
             if (!int.TryParse(userIdStr, out int userId)) return Unauthorized();
 
             if (userRole == "STUDENT" && issue.ReportedById != userId)
@@ -89,9 +107,13 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<CreateIssueResponse>> CreateIssue(CreateIssueRequest request)
         {
-            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(userIdStr, out int userId)) return Unauthorized();
+            var userIdStr = GetUserId();
 
+            if (!int.TryParse(userIdStr, out int userId))
+            {
+                return Unauthorized("Missing user ID claim");
+            } 
+            
             // Simple Priority Engine logic
             int score = 10;
             var factors = new List<string> { "Base score (+10)" };

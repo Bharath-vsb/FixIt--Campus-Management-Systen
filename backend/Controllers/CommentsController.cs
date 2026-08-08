@@ -49,11 +49,27 @@ namespace backend.Controllers
             return Ok(comments);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> AddComment(int issueId, [FromBody] CommentRequest request)
+        private string? GetUserRole()
         {
-            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(userIdStr, out int userId)) return Unauthorized();
+            return User.FindFirst(ClaimTypes.Role)?.Value 
+                ?? User.FindFirst("role")?.Value 
+                ?? User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
+        }
+
+        private string? GetUserId()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                ?? User.FindFirst("nameid")?.Value 
+                ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+        }
+
+        [HttpGet("issue/{issueId}")]
+        public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsForIssue(int issueId)
+        {
+            var userRole = GetUserRole();
+            var userIdStr = GetUserId();
+
+            if (string.IsNullOrEmpty(userRole) || !int.TryParse(userIdStr, out int userId)) return Unauthorized();
 
             var issue = await _context.Issues.FindAsync(issueId);
             if (issue == null) return NotFound();
