@@ -25,7 +25,7 @@ namespace backend.Controllers
 
         private string? GetUserId()
         {
-            return User.Claims.FirstOrDefault(c => c.Type.Contains("nameidentifier", StringComparison.OrdinalIgnoreCase) || c.Type.Contains("nameid", StringComparison.OrdinalIgnoreCase))?.Value;
+            return User.Claims.FirstOrDefault(c => (c.Type.Contains("nameidentifier", StringComparison.OrdinalIgnoreCase) || c.Type.Contains("nameid", StringComparison.OrdinalIgnoreCase)) && int.TryParse(c.Value, out _))?.Value;
         }
 
         [HttpGet("admin")]
