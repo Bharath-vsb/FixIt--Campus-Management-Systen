@@ -27,8 +27,8 @@ export const issueService = {
     return response.data;
   },
 
-  update: async (id: number, data: { status: string }) => {
-    const response = await api.patch(`/issues/${id}/status`, data);
+  update: async (id: number, data: { status?: string; assignedToId?: number }) => {
+    const response = await api.patch(`/issues/${id}`, data);
     return response.data;
   },
 

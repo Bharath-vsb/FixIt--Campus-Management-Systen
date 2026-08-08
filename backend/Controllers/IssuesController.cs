@@ -145,8 +145,8 @@ namespace backend.Controllers
             });
         }
 
-        [HttpPatch("{id}/status")]
-        public async Task<IActionResult> UpdateStatus(int id, UpdateIssueStatusRequest request)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateIssue(int id, UpdateIssueStatusRequest request)
         {
             var issue = await _context.Issues.FindAsync(id);
             if (issue == null) return NotFound();
@@ -159,21 +159,34 @@ namespace backend.Controllers
             if (userRole == "STUDENT")
             {
                 if (issue.ReportedById != userId) return Forbid();
-                if (request.Status != "VERIFIED" || issue.Status != "RESOLVED") return Forbid();
+                if (request.Status != null && request.Status != "VERIFIED" || issue.Status != "RESOLVED") return Forbid();
             }
             else if (userRole == "STAFF")
             {
                 if (issue.AssignedToId != userId) return Forbid();
-                // Staff can move to IN_PROGRESS or RESOLVED
             }
-
-            issue.Status = request.Status;
-            issue.UpdatedAt = DateTime.UtcNow;
-
-            if (request.Status == "RESOLVED" || request.Status == "VERIFIED")
+            else if (userRole == "ADMIN")
             {
-                issue.ResolvedAt = DateTime.UtcNow;
+                if (request.AssignedToId.HasValue)
+                {
+                    issue.AssignedToId = request.AssignedToId.Value;
+                    if (string.IsNullOrEmpty(request.Status) || request.Status == "PENDING")
+                    {
+                        issue.Status = "ASSIGNED";
+                    }
+                }
             }
+
+            if (!string.IsNullOrEmpty(request.Status))
+            {
+                issue.Status = request.Status;
+                if (request.Status == "RESOLVED" || request.Status == "VERIFIED")
+                {
+                    issue.ResolvedAt = DateTime.UtcNow;
+                }
+            }
+
+            issue.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return NoContent();

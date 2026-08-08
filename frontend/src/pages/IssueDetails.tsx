@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { issueService } from '../services/issueService';
+import { staffService, type StaffMember } from '../services/staffService';
 import { useAuth } from '../contexts/AuthContext';
 import type { Issue, Comment } from '../types';
 import PriorityBadge from '../components/PriorityBadge';
@@ -19,6 +20,7 @@ export default function IssueDetails() {
 
   const [issue, setIssue] = useState<Issue | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [staff, setStaff] = useState<StaffMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -34,6 +36,12 @@ export default function IssueDetails() {
       ]);
       setIssue(issueData);
       setComments(commentsData);
+
+      // If user is Admin, load staff for assignment
+      if (user?.role === 'ADMIN') {
+        const staffData = await staffService.getAll();
+        setStaff(staffData);
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to load issue details');
     } finally {
@@ -52,6 +60,16 @@ export default function IssueDetails() {
       fetchDetails();
     } catch (err) {
       showToast('Failed to update status', 'error');
+    }
+  };
+
+  const handleAssign = async (staffId: number) => {
+    try {
+      await issueService.update(Number(id), { assignedToId: staffId });
+      showToast('Issue assigned successfully', 'success');
+      fetchDetails();
+    } catch (err) {
+      showToast('Failed to assign issue', 'error');
     }
   };
 
@@ -143,7 +161,20 @@ export default function IssueDetails() {
                 <span className="text-label-sm text-outline uppercase tracking-wider block mb-1">Assigned To</span>
                 <div className="flex items-center gap-2 text-primary font-medium">
                   <span className="material-symbols-outlined text-[18px]">engineering</span>
-                  {issue.assignedToName || 'Unassigned'}
+                  {user?.role === 'ADMIN' ? (
+                    <select
+                      className="input-field py-1 px-2 min-w-[200px]"
+                      value={issue.assignedToId || ''}
+                      onChange={(e) => handleAssign(Number(e.target.value))}
+                    >
+                      <option value="" disabled>Unassigned</option>
+                      {staff.map(s => (
+                        <option key={s.id} value={s.id}>{s.fullName} ({s.status})</option>
+                      ))}
+                    </select>
+                  ) : (
+                    issue.assignedToName || 'Unassigned'
+                  )}
                 </div>
               </div>
             </div>
