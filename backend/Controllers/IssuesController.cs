@@ -23,16 +23,12 @@ namespace backend.Controllers
 
         private string? GetUserRole()
         {
-            return User.FindFirst(ClaimTypes.Role)?.Value 
-                ?? User.FindFirst("role")?.Value 
-                ?? User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
+            return User.Claims.FirstOrDefault(c => c.Type.Contains("role", StringComparison.OrdinalIgnoreCase))?.Value;
         }
 
         private string? GetUserId()
         {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                ?? User.FindFirst("nameid")?.Value 
-                ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            return User.Claims.FirstOrDefault(c => c.Type.Contains("nameidentifier", StringComparison.OrdinalIgnoreCase) || c.Type.Contains("nameid", StringComparison.OrdinalIgnoreCase))?.Value;
         }
 
         [HttpGet]

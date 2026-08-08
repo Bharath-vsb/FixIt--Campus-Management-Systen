@@ -18,10 +18,20 @@ namespace backend.Controllers
             _context = context;
         }
 
+        private string? GetUserRole()
+        {
+            return User.Claims.FirstOrDefault(c => c.Type.Contains("role", StringComparison.OrdinalIgnoreCase))?.Value;
+        }
+
+        private string? GetUserId()
+        {
+            return User.Claims.FirstOrDefault(c => c.Type.Contains("nameidentifier", StringComparison.OrdinalIgnoreCase) || c.Type.Contains("nameid", StringComparison.OrdinalIgnoreCase))?.Value;
+        }
+
         [HttpGet("admin")]
         public async Task<ActionResult> GetAdminStats()
         {
-            var userRole = User.FindFirstValue(ClaimTypes.Role);
+            var userRole = GetUserRole();
             if (userRole != "ADMIN") return Forbid();
 
             var issues = await _context.Issues.ToListAsync();

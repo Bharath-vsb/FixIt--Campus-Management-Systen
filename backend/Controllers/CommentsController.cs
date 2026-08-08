@@ -19,6 +19,16 @@ namespace backend.Controllers
             _context = context;
         }
 
+        private string? GetUserRole()
+        {
+            return User.Claims.FirstOrDefault(c => c.Type.Contains("role", StringComparison.OrdinalIgnoreCase))?.Value;
+        }
+
+        private string? GetUserId()
+        {
+            return User.Claims.FirstOrDefault(c => c.Type.Contains("nameidentifier", StringComparison.OrdinalIgnoreCase) || c.Type.Contains("nameid", StringComparison.OrdinalIgnoreCase))?.Value;
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetComments(int issueId)
         {
@@ -38,7 +48,7 @@ namespace backend.Controllers
                 })
                 .ToListAsync();
 
-            var userRole = User.FindFirstValue(ClaimTypes.Role);
+            var userRole = GetUserRole();
             
             // Filter out work notes for students
             if (userRole == "STUDENT")
@@ -49,27 +59,11 @@ namespace backend.Controllers
             return Ok(comments);
         }
 
-        private string? GetUserRole()
+        [HttpPost]
+        public async Task<ActionResult> AddComment(int issueId, [FromBody] CommentRequest request)
         {
-            return User.FindFirst(ClaimTypes.Role)?.Value 
-                ?? User.FindFirst("role")?.Value 
-                ?? User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
-        }
-
-        private string? GetUserId()
-        {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                ?? User.FindFirst("nameid")?.Value 
-                ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
-        }
-
-        [HttpGet("issue/{issueId}")]
-        public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsForIssue(int issueId)
-        {
-            var userRole = GetUserRole();
             var userIdStr = GetUserId();
-
-            if (string.IsNullOrEmpty(userRole) || !int.TryParse(userIdStr, out int userId)) return Unauthorized();
+            if (!int.TryParse(userIdStr, out int userId)) return Unauthorized();
 
             var issue = await _context.Issues.FindAsync(issueId);
             if (issue == null) return NotFound();

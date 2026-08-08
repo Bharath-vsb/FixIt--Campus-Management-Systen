@@ -20,9 +20,7 @@ namespace backend.Controllers
 
         private string? GetUserRole()
         {
-            return User.FindFirst(ClaimTypes.Role)?.Value 
-                ?? User.FindFirst("role")?.Value 
-                ?? User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
+            return User.Claims.FirstOrDefault(c => c.Type.Contains("role", StringComparison.OrdinalIgnoreCase))?.Value;
         }
 
         [HttpGet]
