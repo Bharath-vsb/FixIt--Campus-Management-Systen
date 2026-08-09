@@ -42,8 +42,10 @@ export const issueService = {
     formData.append('urgency', data.urgency);
     formData.append('affectedPeople', String(data.affectedPeople));
     formData.append('photo', photo);
-    // No manual Content-Type — Axios/browser sets multipart boundary automatically
-    const response = await api.post('/issues', formData);
+    // Override default application/json so Axios sets multipart/form-data + boundary
+    const response = await api.post('/issues', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
     return response.data;
   },
 
@@ -60,7 +62,9 @@ export const issueService = {
     const formData = new FormData();
     formData.append('photo', photo);
     // No manual Content-Type — Axios/browser handles multipart boundary
-    const response = await api.post(`/issues/${issueId}/evidence`, formData);
+    const response = await api.post(`/issues/${issueId}/evidence`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
     return response.data;
   },
 

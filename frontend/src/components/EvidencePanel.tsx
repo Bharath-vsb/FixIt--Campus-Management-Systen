@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { EvidenceItem } from '../types';
 import ImageModal from './ImageModal';
+import AuthenticatedImage from './AuthenticatedImage';
+
 
 interface EvidencePanelProps {
   problemEvidence: EvidenceItem[];
@@ -41,12 +43,12 @@ function EvidenceCard({
               className="cursor-zoom-in relative group rounded-lg overflow-hidden"
               onClick={() => setModalOpen(true)}
             >
-              <img
-                src={evidence.url}
+              <AuthenticatedImage
+                url={evidence.url}
                 alt={label}
                 className="w-full h-48 object-cover rounded-lg"
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center pointer-events-none">
                 <span className="material-symbols-outlined text-white text-[36px] opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg">
                   zoom_in
                 </span>

@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import AuthenticatedImage from './AuthenticatedImage';
+
 
 interface ImageModalProps {
   src: string;
@@ -39,8 +41,8 @@ export default function ImageModal({ src, alt, onClose }: ImageModalProps) {
         >
           <span className="material-symbols-outlined text-[20px]">close</span>
         </button>
-        <img
-          src={src}
+        <AuthenticatedImage
+          url={src}
           alt={alt}
           className="max-w-[90vw] max-h-[85vh] object-contain rounded-xl shadow-2xl"
         />
