@@ -55,7 +55,7 @@ export default function StaffCritical() {
     }
   };
 
-  const isMyIssue = (issue: Issue) => issue.assignedTo === user?.id;
+  const isMyIssue = (issue: Issue) => issue.assignedToId === user?.id;
 
   if (isLoading) return <LoadingSpinner fullScreen />;
   if (error) return <ErrorState message={error} onRetry={fetchIssues} />;

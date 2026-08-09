@@ -1,8 +1,23 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+secrets/
+*.secret
+
+# Local uploads
+uploads/
+
+# Database/local database files
+*.db
+*.sqlite
+*.sqlite3
+*.mdf
+*.ldf
+
 # Node
 node_modules/
 dist/
-.env
-.env.local
 
 # .NET
 bin/

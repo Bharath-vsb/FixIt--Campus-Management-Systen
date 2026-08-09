@@ -12,6 +12,7 @@ namespace backend.DTOs
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Role { get; set; } = "STUDENT";
+        public string MobileNumber { get; set; } = string.Empty;
     }
 
     public class AuthResponse
@@ -26,5 +27,7 @@ namespace backend.DTOs
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public string MobileNumber { get; set; } = string.Empty;
+        public string AccountStatus { get; set; } = "ACTIVE";
     }
 }

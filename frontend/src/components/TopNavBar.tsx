@@ -1,7 +1,4 @@
-import { useAuth } from '../contexts/AuthContext';
-
 export default function TopNavBar() {
-  const { user } = useAuth();
 
   return (
     <nav className="md:hidden fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-16 bg-surface shadow-sm">

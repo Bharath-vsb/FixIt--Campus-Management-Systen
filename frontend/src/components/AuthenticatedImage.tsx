@@ -15,8 +15,10 @@ export default function AuthenticatedImage({ url, className, alt, ...props }: Au
 
     const fetchImage = async () => {
       try {
+        // Remove leading /api since the Axios instance baseURL already contains it
+        const fetchUrl = url.startsWith('/api') ? url.substring(4) : url;
         // Fetch as blob so Axios attaches the JWT Authorization header
-        const response = await api.get(url, { responseType: 'blob' });
+        const response = await api.get(fetchUrl, { responseType: 'blob' });
         if (isMounted) {
           objectUrl = URL.createObjectURL(response.data);
           setImgSrc(objectUrl);

@@ -17,7 +17,8 @@ export interface RegisterRequest {
   fullName: string;
   email: string;
   password: string;
-  role: 'STUDENT' | 'STAFF';
+  role: 'STUDENT' | 'STAFF' | 'ADMIN';
+  mobileNumber: string;
 }
 
 export interface AuthResponse {

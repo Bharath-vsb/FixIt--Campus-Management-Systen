@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { issueService } from '../services/issueService';
 import { staffService, type StaffMember } from '../services/staffService';
-import type { Issue, IssueStatus } from '../types';
-import PriorityBadge from '../components/PriorityBadge';
+import type { Issue } from '../types';
 import StatusBadge from '../components/StatusBadge';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorState from '../components/ErrorState';
@@ -140,7 +139,7 @@ export default function AdminCritical() {
                   <td className="p-4 hidden lg:table-cell">
                     <select
                       className="input-field py-1 px-2 text-label-sm min-w-[160px]"
-                      value={issue.assignedTo || ''}
+                      value={issue.assignedToId || ''}
                       onChange={e => e.target.value && handleAssign(issue.id, Number(e.target.value))}
                       disabled={assigningId === issue.id}
                     >

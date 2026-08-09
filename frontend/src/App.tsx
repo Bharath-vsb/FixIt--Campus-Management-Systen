@@ -6,7 +6,8 @@ import DashboardLayout from './layouts/DashboardLayout';
 
 // Pages — Public
 import LandingPage from './pages/LandingPage';
-import AuthPage from './pages/AuthPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
 // Pages — Student
 import StudentDashboard from './pages/StudentDashboard';
@@ -26,7 +27,7 @@ import StaffProfile from './pages/StaffProfile';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminIssues from './pages/AdminIssues';
 import AdminCritical from './pages/AdminCritical';
-import AdminStaff from './pages/AdminStaff';
+import AdminStaffManagement from './pages/AdminStaffManagement';
 import AdminCategories from './pages/AdminCategories';
 import AdminLocations from './pages/AdminLocations';
 import AdminAnalytics from './pages/AdminAnalytics';
@@ -40,8 +41,8 @@ export default function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<PublicLayout><LandingPage /></PublicLayout>} />
-            <Route path="/login" element={<PublicLayout><AuthPage /></PublicLayout>} />
-            <Route path="/register" element={<PublicLayout><AuthPage /></PublicLayout>} />
+            <Route path="/login" element={<PublicLayout><LoginPage /></PublicLayout>} />
+            <Route path="/register" element={<PublicLayout><RegisterPage /></PublicLayout>} />
 
             {/* Smart Dashboard Redirect */}
             <Route path="/dashboard" element={<DashboardRedirect />} />
@@ -72,7 +73,7 @@ export default function App() {
               <Route path="issues" element={<AdminIssues />} />
               <Route path="issues/:id" element={<IssueDetails />} />
               <Route path="critical" element={<AdminCritical />} />
-              <Route path="staff" element={<AdminStaff />} />
+              <Route path="staff" element={<AdminStaffManagement />} />
               <Route path="categories" element={<AdminCategories />} />
               <Route path="locations" element={<AdminLocations />} />
               <Route path="analytics" element={<AdminAnalytics />} />

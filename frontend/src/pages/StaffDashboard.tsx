@@ -6,12 +6,12 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorState from '../components/ErrorState';
 import { issueService } from '../services/issueService';
 import type { Issue } from '../types';
-import { useAuth } from '../contexts/AuthContext';
+
 import { dashboardService } from '../services/dashboardService';
 import type { DashboardStats } from '../types';
 
 export default function StaffDashboard() {
-  const { user } = useAuth();
+
   const [issues, setIssues] = useState<Issue[]>([]);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);

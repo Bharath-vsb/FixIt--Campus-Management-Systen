@@ -42,7 +42,7 @@ export default function Timeline({ currentStatus, history = [] }: TimelineProps)
 
   return (
     <div className="relative border-l-2 border-outline-variant ml-4 space-y-6 pb-4">
-      {steps.map((step, index) => (
+      {steps.map((step) => (
         <div key={step.status} className="relative pl-6">
           {/* Icon Badge */}
           <div className={`absolute -left-[17px] p-1 rounded-full border-2 bg-surface ${

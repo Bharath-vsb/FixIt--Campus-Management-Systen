@@ -3,7 +3,7 @@ services:
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: fixit_user
-      POSTGRES_PASSWORD: fixit_password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fixit_local_password}
       POSTGRES_DB: fixit_db
     ports:
       - "5432:5432"
@@ -18,8 +18,8 @@ services:
       - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=db;Database=fixit_db;Username=fixit_user;Password=fixit_password
-      - Jwt__Key=ThisIsASecretKeyForJwtTokensThatIsLongEnoughToWorkProperly
+      - ConnectionStrings__DefaultConnection=Host=db;Database=fixit_db;Username=fixit_user;Password=${POSTGRES_PASSWORD:-fixit_local_password}
+      - Jwt__Key=${JWT_KEY:-CHANGE_ME_LOCAL_JWT_KEY}
       - Jwt__Issuer=FixItApp
       - Jwt__Audience=FixItUsers
       - UploadSettings__UploadsRoot=/app/uploads

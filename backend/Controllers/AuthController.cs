@@ -27,35 +27,54 @@ namespace backend.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AuthResponse>> Register(RegisterRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.MobileNumber))
+            {
+                return BadRequest(new { message = "Mobile number is required." });
+            }
+
+            if (request.Role == "ADMIN")
+            {
+                return BadRequest(new { message = "Admin registration is not allowed." });
+            }
+
             if (await _context.Users.AnyAsync(u => u.Email == request.Email))
             {
-                return BadRequest(new { message = "Email is already registered" });
+                return BadRequest(new { message = "An account with this email already exists." });
             }
+
+            var status = request.Role == "STAFF" ? "PENDING_APPROVAL" : "ACTIVE";
 
             var user = new User
             {
                 FullName = request.FullName,
                 Email = request.Email,
+                MobileNumber = request.MobileNumber,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                Role = request.Role
+                Role = request.Role,
+                AccountStatus = status
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var token = GenerateJwtToken(user);
-
-            return Ok(new AuthResponse
+            var responseDto = new UserDto
             {
-                Token = token,
-                User = new UserDto
-                {
-                    Id = user.Id,
-                    FullName = user.FullName,
-                    Email = user.Email,
-                    Role = user.Role
-                }
-            });
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Role = user.Role,
+                MobileNumber = user.MobileNumber,
+                AccountStatus = user.AccountStatus
+            };
+
+            if (user.AccountStatus == "PENDING_APPROVAL")
+            {
+                // Do not issue JWT for pending staff
+                return Ok(new AuthResponse { Token = "", User = responseDto });
+            }
+
+            var token = GenerateJwtToken(user);
+            return Ok(new AuthResponse { Token = token, User = responseDto });
         }
 
         [HttpPost("login")]
@@ -68,6 +87,15 @@ namespace backend.Controllers
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
+            if (user.AccountStatus == "PENDING_APPROVAL")
+            {
+                return Unauthorized(new { message = "Your staff account is awaiting admin approval." });
+            }
+            if (user.AccountStatus == "DISABLED" || user.AccountStatus == "REMOVED")
+            {
+                return Unauthorized(new { message = "Your staff account has been disabled. Please contact the administrator." });
+            }
+
             var token = GenerateJwtToken(user);
 
             return Ok(new AuthResponse
@@ -78,7 +106,9 @@ namespace backend.Controllers
                     Id = user.Id,
                     FullName = user.FullName,
                     Email = user.Email,
-                    Role = user.Role
+                    Role = user.Role,
+                    MobileNumber = user.MobileNumber,
+                    AccountStatus = user.AccountStatus
                 }
             });
         }

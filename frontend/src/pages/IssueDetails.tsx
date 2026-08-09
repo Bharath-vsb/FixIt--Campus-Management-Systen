@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { issueService } from '../services/issueService';
 import { staffService, type StaffMember } from '../services/staffService';
 import { useAuth } from '../contexts/AuthContext';
-import type { Issue, Comment, EvidenceItem } from '../types';
+import type { Issue, Comment } from '../types';
 import PriorityBadge from '../components/PriorityBadge';
 import StatusBadge from '../components/StatusBadge';
 import LoadingSpinner from '../components/LoadingSpinner';

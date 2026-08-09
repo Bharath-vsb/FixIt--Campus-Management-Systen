@@ -1,0 +1,32 @@
+databases:
+  - name: fixit-db
+    plan: free
+
+services:
+  - type: web
+    name: fixit-backend
+    runtime: docker
+    plan: free
+    envVars:
+      - key: ConnectionStrings__DefaultConnection
+        fromDatabase:
+          name: fixit-db
+          property: connectionString
+      - key: STORAGE_PROVIDER
+        value: Cloudinary
+      - key: CORS_ORIGINS
+        value: https://fixit-frontend.onrender.com # Placeholder - replace with actual frontend URL in dashboard if it changes
+
+  - type: web
+    name: fixit-frontend
+    runtime: static
+    plan: free
+    buildCommand: npm install && npm run build
+    publishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://fixit-backend.onrender.com/api # Placeholder - replace with actual backend URL in dashboard

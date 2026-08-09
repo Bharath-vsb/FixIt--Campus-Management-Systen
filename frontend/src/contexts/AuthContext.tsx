@@ -8,7 +8,7 @@ interface AuthContextType {
   isLoading: boolean;
   error: string | null;
   login: (data: LoginRequest) => Promise<void>;
-  register: (data: RegisterRequest) => Promise<void>;
+  register: (data: RegisterRequest) => Promise<{ success: true, pending?: boolean }>;
   logout: () => void;
   clearError: () => void;
 }
@@ -54,18 +54,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (data: RegisterRequest) => {
+  const register = async (data: RegisterRequest): Promise<{ success: true, pending?: boolean }> => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await api.post('/auth/register', data);
       const { token, user } = response.data;
       
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      setUser(user);
-      setIsAuthenticated(true);
+      if (token) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        setUser(user);
+        setIsAuthenticated(true);
+        return { success: true };
+      } else {
+        // Pending approval staff member
+        return { success: true, pending: true };
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to create account. Please try again.');
       throw err;

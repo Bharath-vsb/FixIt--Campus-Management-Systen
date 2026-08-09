@@ -3,6 +3,7 @@ using backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using backend.Services;
 
 namespace backend.Controllers
 {
@@ -12,14 +13,12 @@ namespace backend.Controllers
     public class EvidenceController : ControllerBase
     {
         private readonly FixItDbContext _context;
-        private readonly IWebHostEnvironment _env;
-        private readonly IConfiguration _config;
+        private readonly IFileStorageService _storage;
 
-        public EvidenceController(FixItDbContext context, IWebHostEnvironment env, IConfiguration config)
+        public EvidenceController(FixItDbContext context, backend.Services.IFileStorageService storage)
         {
             _context = context;
-            _env = env;
-            _config = config;
+            _storage = storage;
         }
 
         private string? GetUserRole() =>
@@ -31,8 +30,7 @@ namespace backend.Controllers
                  c.Type.Contains("nameid", StringComparison.OrdinalIgnoreCase)) &&
                 int.TryParse(c.Value, out _))?.Value;
 
-        private string GetUploadsRoot() =>
-            _config["UploadSettings:UploadsRoot"] ?? Path.Combine(_env.ContentRootPath, "uploads");
+
 
         private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
         private static readonly string[] AllowedContentTypes = { "image/jpeg", "image/png", "image/webp" };
@@ -79,19 +77,10 @@ namespace backend.Controllers
             var validationError = ValidateImageFile(photo);
             if (validationError != null) return BadRequest(validationError);
 
-            // Save file
-            var uploadsRoot = GetUploadsRoot();
-            Directory.CreateDirectory(uploadsRoot);
+            // Save file via storage service
+            var (storageRef, fileName) = await _storage.SaveUploadedFileAsync(photo);
 
-            var ext = Path.GetExtension(photo.FileName).ToLowerInvariant();
-            var fileName = $"{Guid.NewGuid():N}{ext}";
-            var relativePath = $"uploads/{fileName}";
-            var absolutePath = Path.Combine(uploadsRoot, fileName);
-
-            await using var stream = new FileStream(absolutePath, FileMode.Create, FileAccess.Write);
-            await photo.CopyToAsync(stream);
-
-            // Store evidence record (relative path only)
+            // Store evidence record
             var evidence = new IssueEvidence
             {
                 IssueId = issueId,
@@ -100,7 +89,7 @@ namespace backend.Controllers
                 FileName = fileName,
                 ContentType = photo.ContentType,
                 FileSize = photo.Length,
-                StoragePath = relativePath
+                StoragePath = storageRef
             };
 
             _context.IssueEvidences.Add(evidence);
@@ -141,15 +130,15 @@ namespace backend.Controllers
 
             if (!authorized) return Forbid();
 
-            // Resolve absolute path from relative stored path
-            var uploadsRoot = GetUploadsRoot();
-            var absolutePath = Path.Combine(uploadsRoot, evidence.FileName);
-
-            if (!System.IO.File.Exists(absolutePath))
+            try
+            {
+                var (stream, ct) = await _storage.GetFileStreamAsync(evidence.StoragePath);
+                return File(stream, ct, enableRangeProcessing: true);
+            }
+            catch (FileNotFoundException)
+            {
                 return NotFound("Image file not found on server.");
-
-            var stream = new FileStream(absolutePath, FileMode.Open, FileAccess.Read);
-            return File(stream, evidence.ContentType, enableRangeProcessing: true);
+            }
         }
     }
 }

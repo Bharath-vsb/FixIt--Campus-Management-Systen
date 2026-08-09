@@ -7,21 +7,45 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Render Port Binding
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
+
 // Add DbContext
 builder.Services.AddDbContext<FixItDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add CORS
+var allowedOrigins = builder.Configuration["CORS_ORIGINS"]?.Split(',') ?? Array.Empty<string>();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
+    options.AddPolicy("AllowSpecific",
         b =>
         {
-            b.AllowAnyOrigin()
-             .AllowAnyMethod()
-             .AllowAnyHeader();
+            if (builder.Environment.IsDevelopment())
+            {
+                b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            }
+            else
+            {
+                b.WithOrigins(allowedOrigins).AllowAnyMethod().AllowAnyHeader();
+            }
         });
 });
+
+// Configure Storage Service
+var storageProvider = Environment.GetEnvironmentVariable("STORAGE_PROVIDER") ?? builder.Configuration["STORAGE_PROVIDER"];
+if (storageProvider == "Cloudinary")
+{
+    builder.Services.AddScoped<backend.Services.IFileStorageService, backend.Services.CloudinaryStorageService>();
+}
+else
+{
+    builder.Services.AddScoped<backend.Services.IFileStorageService, backend.Services.LocalFileStorageService>();
+}
 
 // Configure JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -72,17 +96,25 @@ var uploadsRoot = app.Configuration["UploadSettings:UploadsRoot"]
 Directory.CreateDirectory(uploadsRoot);
 
 // ── Apply schema additions (idempotent SQL) ───────────────────────────────────
+var shouldMigrate = args.Contains("--migrate");
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<FixItDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    try
+    
+    if (shouldMigrate)
     {
-        db.Database.Migrate();
-    }
-    catch (Exception ex)
-    {
-        logger.LogWarning(ex, "Migrate() failed — attempting direct SQL schema fix.");
+        try
+        {
+            logger.LogInformation("Running EF Core migrations (--migrate flag detected)...");
+            db.Database.Migrate();
+            logger.LogInformation("Migrations completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Migrate() failed — attempting direct SQL schema fix.");
+        }
     }
 
     // Idempotent DDL — safe to run even if columns already exist
@@ -161,9 +193,18 @@ using (var scope = app.Services.CreateScope())
 
 // NOTE: Do NOT serve /uploads as static files — all image access goes through authenticated API endpoints
 
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecific");
+
+app.MapGet("/health", () => new { status = "healthy" });
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+if (shouldMigrate)
+{
+    // If we only wanted to migrate, exit now
+    return;
+}
 
 app.Run();

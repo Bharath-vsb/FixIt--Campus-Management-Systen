@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using backend.Services;
 
 namespace backend.Controllers
 {
@@ -14,14 +15,16 @@ namespace backend.Controllers
     public class IssuesController : ControllerBase
     {
         private readonly FixItDbContext _context;
+        private readonly IFileStorageService _storage;
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _config;
 
-        public IssuesController(FixItDbContext context, IWebHostEnvironment env, IConfiguration config)
+        public IssuesController(FixItDbContext context, IWebHostEnvironment env, IConfiguration config, backend.Services.IFileStorageService storage)
         {
             _context = context;
             _env = env;
             _config = config;
+            _storage = storage;
         }
 
         private string? GetUserRole() =>
@@ -148,8 +151,8 @@ namespace backend.Controllers
                 i.Status != "RESOLVED" &&
                 i.Status != "VERIFIED");
 
-            // ── Save photo to uploads ─────────────────────────────────────────
-            var (relativePath, fileName) = await SaveUploadedFile(photo);
+            // ── Save photo ──────────────────────────────────────────
+            var (storageRef, fileName) = await _storage.SaveUploadedFileAsync(photo);
 
             // ── Create issue ──────────────────────────────────────────────────
             var issue = new Issue
@@ -179,7 +182,7 @@ namespace backend.Controllers
                 FileName = fileName,
                 ContentType = photo.ContentType,
                 FileSize = photo.Length,
-                StoragePath = relativePath   // relative: "uploads/{GUID}.ext"
+                StoragePath = storageRef
             };
             _context.IssueEvidences.Add(evidence);
             await _context.SaveChangesAsync();
@@ -347,22 +350,6 @@ namespace backend.Controllers
                 return "Invalid file type. Please upload a JPG, PNG, or WEBP image.";
 
             return null; // valid
-        }
-
-        private async Task<(string relativePath, string fileName)> SaveUploadedFile(IFormFile file)
-        {
-            var uploadsRoot = GetUploadsRoot();
-            Directory.CreateDirectory(uploadsRoot);
-
-            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-            var fileName = $"{Guid.NewGuid():N}{ext}";
-            var relativePath = Path.Combine("uploads", fileName).Replace('\\', '/');
-            var absolutePath = Path.Combine(uploadsRoot, fileName);
-
-            await using var stream = new FileStream(absolutePath, FileMode.Create, FileAccess.Write);
-            await file.CopyToAsync(stream);
-
-            return (relativePath, fileName);
         }
 
         internal IssueDto MapToDto(Issue i)
