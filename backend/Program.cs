@@ -15,8 +15,21 @@ if (!string.IsNullOrEmpty(port))
 }
 
 // Add DbContext
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (!string.IsNullOrEmpty(connectionString) && 
+    (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://")))
+{
+    var uri = new Uri(connectionString);
+    var userInfo = uri.UserInfo.Split(':');
+    var username = Uri.UnescapeDataString(userInfo[0]);
+    var password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
+    var database = Uri.UnescapeDataString(uri.LocalPath.TrimStart('/'));
+
+    connectionString = $"Host={uri.Host};Port={(uri.Port > 0 ? uri.Port : 5432)};Database={database};Username={username};Password={password};Ssl Mode=Require;Trust Server Certificate=true;";
+}
+
 builder.Services.AddDbContext<FixItDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 // Add CORS
 var allowedOrigins = builder.Configuration["CORS_ORIGINS"]?.Split(',') ?? Array.Empty<string>();
