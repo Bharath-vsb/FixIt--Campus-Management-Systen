@@ -169,8 +169,8 @@ namespace backend.Controllers
             var issue = await _context.Issues.FindAsync(id);
             if (issue == null) return NotFound();
 
-            var userRole = User.FindFirstValue(ClaimTypes.Role);
-            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userRole = GetUserRole();
+            var userIdStr = GetUserId();
             if (!int.TryParse(userIdStr, out int userId)) return Unauthorized();
 
             // Authorization rules
