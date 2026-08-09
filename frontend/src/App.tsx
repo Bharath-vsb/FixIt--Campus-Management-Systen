@@ -25,7 +25,12 @@ import StaffProfile from './pages/StaffProfile';
 // Pages — Admin
 import AdminDashboard from './pages/AdminDashboard';
 import AdminIssues from './pages/AdminIssues';
+import AdminCritical from './pages/AdminCritical';
 import AdminStaff from './pages/AdminStaff';
+import AdminCategories from './pages/AdminCategories';
+import AdminLocations from './pages/AdminLocations';
+import AdminAnalytics from './pages/AdminAnalytics';
+import AdminProfile from './pages/AdminProfile';
 
 export default function App() {
   return (
@@ -66,7 +71,12 @@ export default function App() {
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="issues" element={<AdminIssues />} />
               <Route path="issues/:id" element={<IssueDetails />} />
+              <Route path="critical" element={<AdminCritical />} />
               <Route path="staff" element={<AdminStaff />} />
+              <Route path="categories" element={<AdminCategories />} />
+              <Route path="locations" element={<AdminLocations />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
+              <Route path="profile" element={<AdminProfile />} />
             </Route>
 
             {/* Catch All */}

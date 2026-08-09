@@ -12,8 +12,12 @@ export const dashboardService = {
     return response.data;
   },
 
+  getAnalytics: async () => {
+    const response = await api.get('/dashboard/analytics');
+    return response.data;
+  },
+
   getStudentStats: async () => {
-    // For student we just fetch their issues and derive stats locally in the component
     throw new Error('Not implemented. Derive locally.');
   }
 };

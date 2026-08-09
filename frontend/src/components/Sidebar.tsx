@@ -26,12 +26,16 @@ const navItems: NavItem[] = [
 
   // ── ADMIN ────────────────────────────────────
   { icon: 'list_alt', label: 'All Issues', path: '/admin/issues', roles: ['ADMIN'] },
-  { icon: 'error', label: 'Critical', path: '/admin/issues?priority=CRITICAL', roles: ['ADMIN'] },
+  { icon: 'error', label: 'Critical Issues', path: '/admin/critical', roles: ['ADMIN'] },
   { icon: 'group', label: 'Staff', path: '/admin/staff', roles: ['ADMIN'] },
+  { icon: 'category', label: 'Categories', path: '/admin/categories', roles: ['ADMIN'] },
+  { icon: 'location_on', label: 'Locations', path: '/admin/locations', roles: ['ADMIN'] },
+  { icon: 'analytics', label: 'Analytics', path: '/admin/analytics', roles: ['ADMIN'] },
 ];
 
 const profileItems: NavItem[] = [
   { icon: 'person', label: 'Profile', path: '/staff/profile', roles: ['STAFF'] },
+  { icon: 'person', label: 'Profile', path: '/admin/profile', roles: ['ADMIN'] },
 ];
 
 export default function Sidebar() {

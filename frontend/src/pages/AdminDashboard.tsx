@@ -20,7 +20,7 @@ export default function AdminDashboard() {
     setError(null);
     try {
       const [issuesData, statsData] = await Promise.all([
-        issueService.getAll({ status: 'PENDING' }), // Get pending for quick assignment
+        issueService.getAll(), // all issues for category breakdown
         dashboardService.getAdminStats()
       ]);
       setIssues(issuesData);
@@ -99,34 +99,38 @@ export default function AdminDashboard() {
           
           <div className="card p-6">
             <h3 className="text-label-md font-bold text-primary mb-4 uppercase tracking-wider">Top Categories</h3>
-            <div className="space-y-4">
-              {/* Dummy data for now, ideally comes from API */}
-              <div className="flex justify-between items-center text-body-md">
-                <span>Plumbing</span>
-                <span className="font-bold text-primary">32%</span>
-              </div>
-              <div className="flex justify-between items-center text-body-md">
-                <span>Electrical</span>
-                <span className="font-bold text-primary">24%</span>
-              </div>
-              <div className="flex justify-between items-center text-body-md">
-                <span>HVAC</span>
-                <span className="font-bold text-primary">18%</span>
-              </div>
+            <div className="space-y-3">
+              {(() => {
+                const catCounts: Record<string, number> = {};
+                issues.forEach(i => { catCounts[i.category] = (catCounts[i.category] || 0) + 1; });
+                const sorted = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
+                const total = issues.length || 1;
+                return sorted.length > 0 ? sorted.map(([cat, cnt]) => (
+                  <div key={cat}>
+                    <div className="flex justify-between text-body-md mb-1">
+                      <span>{cat}</span>
+                      <span className="font-bold text-primary">{Math.round((cnt / total) * 100)}%</span>
+                    </div>
+                    <div className="w-full bg-surface-container-high rounded-full h-1.5">
+                      <div className="bg-primary h-1.5 rounded-full" style={{ width: `${Math.round((cnt / total) * 100)}%` }} />
+                    </div>
+                  </div>
+                )) : <p className="text-body-md text-on-surface-variant italic">No data yet.</p>;
+              })()}
             </div>
           </div>
           
           <div className="card p-6 bg-primary-container text-on-primary-container">
-            <h3 className="text-label-md font-bold mb-4 uppercase tracking-wider">Staff Availability</h3>
+            <h3 className="text-label-md font-bold mb-4 uppercase tracking-wider">Issue Overview</h3>
             <div className="flex items-end justify-between">
               <div>
-                <div className="text-display-lg font-bold">8/12</div>
-                <div className="text-label-sm opacity-80 mt-1">Available Staff Members</div>
+                <div className="text-display-lg font-bold">{stats.pendingIssues}</div>
+                <div className="text-label-sm opacity-80 mt-1">Pending Triage</div>
               </div>
-              <span className="material-symbols-outlined text-4xl opacity-50">group</span>
+              <span className="material-symbols-outlined text-4xl opacity-50">pending_actions</span>
             </div>
-            <Link to="/admin/staff" className="mt-4 text-on-primary-container font-semibold hover:underline text-sm inline-block">
-              View Staff Roster →
+            <Link to="/admin/issues" className="mt-4 text-on-primary-container font-semibold hover:underline text-sm inline-block">
+              Manage All Issues →
             </Link>
           </div>
         </div>
