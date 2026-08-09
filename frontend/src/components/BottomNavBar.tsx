@@ -5,32 +5,43 @@ export default function BottomNavBar() {
   const { user } = useAuth();
   const location = useLocation();
 
-  const getBasePath = () => {
-    switch (user?.role) {
-      case 'ADMIN': return '/admin';
-      case 'STAFF': return '/staff';
-      default: return '/student';
-    }
-  };
+  type Tab = { icon: string; label: string; path: string };
 
-  const base = getBasePath();
-
-  const tabs = [
-    { icon: 'home', label: 'Home', path: `${base}/dashboard` },
-    { icon: 'list_alt', label: 'Issues', path: `${base}/issues` },
-    { icon: 'notifications', label: 'Alerts', path: '#' },
-    { icon: 'person', label: 'Profile', path: '/profile' },
+  const studentTabs: Tab[] = [
+    { icon: 'home', label: 'Home', path: '/student/dashboard' },
+    { icon: 'list_alt', label: 'Issues', path: '/student/issues' },
+    { icon: 'report', label: 'Report', path: '/student/report-issue' },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const staffTabs: Tab[] = [
+    { icon: 'home', label: 'Home', path: '/staff/dashboard' },
+    { icon: 'task', label: 'My Tasks', path: '/staff/tasks' },
+    { icon: 'list_alt', label: 'All', path: '/staff/issues' },
+    { icon: 'error', label: 'Critical', path: '/staff/critical' },
+    { icon: 'person', label: 'Profile', path: '/staff/profile' },
+  ];
+
+  const adminTabs: Tab[] = [
+    { icon: 'home', label: 'Home', path: '/admin/dashboard' },
+    { icon: 'list_alt', label: 'Issues', path: '/admin/issues' },
+    { icon: 'group', label: 'Staff', path: '/admin/staff' },
+  ];
+
+  const tabs =
+    user?.role === 'STAFF' ? staffTabs :
+    user?.role === 'ADMIN' ? adminTabs :
+    studentTabs;
+
+  const isActive = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(path + '/');
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface shadow-[0_-4px_6px_-1px_rgba(15,23,42,0.05)] rounded-t-xl">
+    <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 bg-surface shadow-[0_-4px_6px_-1px_rgba(15,23,42,0.05)] rounded-t-xl">
       {tabs.map((tab) => (
         <Link
           key={tab.label}
           to={tab.path}
-          className={`flex flex-col items-center justify-center px-4 py-1 rounded-2xl transition-all duration-200 ${
+          className={`flex flex-col items-center justify-center px-3 py-1 rounded-2xl transition-all duration-200 ${
             isActive(tab.path)
               ? 'bg-primary-container text-on-primary-container scale-90'
               : 'text-on-surface-variant hover:bg-surface-container-highest'

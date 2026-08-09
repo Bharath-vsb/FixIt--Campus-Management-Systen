@@ -7,18 +7,31 @@ interface NavItem {
   label: string;
   path: string;
   roles?: UserRole[];
+  dividerBefore?: boolean;
 }
 
 const navItems: NavItem[] = [
-  { icon: 'dashboard', label: 'Dashboard', path: '/dashboard', },
+  // Dashboard — all roles
+  { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
+
+  // ── STUDENT ──────────────────────────────────
   { icon: 'report', label: 'Report Issue', path: '/student/report-issue', roles: ['STUDENT'] },
   { icon: 'assignment', label: 'My Issues', path: '/student/issues', roles: ['STUDENT'] },
-  { icon: 'assignment_ind', label: 'Assigned', path: '/staff/issues', roles: ['STAFF'] },
+
+  // ── STAFF ────────────────────────────────────
+  { icon: 'task', label: 'My Tasks', path: '/staff/tasks', roles: ['STAFF'] },
+  { icon: 'list_alt', label: 'All Issues', path: '/staff/issues', roles: ['STAFF'] },
+  { icon: 'error', label: 'Critical', path: '/staff/critical', roles: ['STAFF'] },
+  { icon: 'task_alt', label: 'Resolved', path: '/staff/resolved', roles: ['STAFF'] },
+
+  // ── ADMIN ────────────────────────────────────
   { icon: 'list_alt', label: 'All Issues', path: '/admin/issues', roles: ['ADMIN'] },
   { icon: 'error', label: 'Critical', path: '/admin/issues?priority=CRITICAL', roles: ['ADMIN'] },
   { icon: 'group', label: 'Staff', path: '/admin/staff', roles: ['ADMIN'] },
-  { icon: 'category', label: 'Categories', path: '/admin/management', roles: ['ADMIN'] },
-  { icon: 'analytics', label: 'Analytics', path: '/admin/analytics', roles: ['ADMIN'] },
+];
+
+const profileItems: NavItem[] = [
+  { icon: 'person', label: 'Profile', path: '/staff/profile', roles: ['STAFF'] },
 ];
 
 export default function Sidebar() {
@@ -41,8 +54,13 @@ export default function Sidebar() {
     path: item.path === '/dashboard' ? getDashboardPath() : item.path,
   }));
 
+  const filteredProfileItems = profileItems.filter(item => {
+    if (!item.roles) return true;
+    return user && item.roles.includes(user.role);
+  });
+
   const isActive = (path: string) => {
-    if (path.includes('?')) return location.pathname === path.split('?')[0];
+    if (path.includes('?')) return location.pathname === path.split('?')[0] && location.search === '?' + path.split('?')[1];
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };
 
@@ -61,7 +79,7 @@ export default function Sidebar() {
       <nav className="flex flex-col gap-2 flex-grow overflow-y-auto">
         {filteredItems.map((item) => (
           <Link
-            key={item.path}
+            key={item.label}
             to={item.path}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-150 ${
               isActive(item.path)
@@ -80,15 +98,29 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Bottom actions */}
+      {/* Bottom section: Profile (staff only) + Logout */}
       <div className="mt-auto flex flex-col gap-2 pt-4 border-t border-outline-variant">
-        <Link
-          to="/profile"
-          className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors"
-        >
-          <span className="material-symbols-outlined">person</span>
-          <span className="text-label-md">{user?.fullName || 'Profile'}</span>
-        </Link>
+        {/* Profile links (role-specific) */}
+        {filteredProfileItems.map(item => (
+          <Link
+            key={item.label}
+            to={item.path}
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-150 ${
+              isActive(item.path)
+                ? 'bg-secondary-container text-on-secondary-container font-bold scale-95'
+                : 'text-on-surface-variant hover:bg-surface-container-low'
+            }`}
+          >
+            <span
+              className="material-symbols-outlined"
+              style={isActive(item.path) ? { fontVariationSettings: "'FILL' 1" } : undefined}
+            >
+              {item.icon}
+            </span>
+            <span className="text-label-md">{item.label}</span>
+          </Link>
+        ))}
+
         <button
           onClick={logout}
           className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors w-full text-left"

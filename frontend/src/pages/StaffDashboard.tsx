@@ -69,12 +69,12 @@ export default function StaffDashboard() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-headline-md font-bold text-primary">Your Active Tasks</h2>
-          <Link to="/staff/issues" className="text-primary font-semibold hover:underline text-label-md">
-            View All Assigned
+          <Link to="/staff/tasks" className="text-primary font-semibold hover:underline text-label-md">
+            View All Tasks
           </Link>
         </div>
         
-        <IssueTable issues={activeIssues} basePath="/staff/issues" />
+        <IssueTable issues={activeIssues} basePath="/staff/tasks" />
       </div>
     </div>
   );

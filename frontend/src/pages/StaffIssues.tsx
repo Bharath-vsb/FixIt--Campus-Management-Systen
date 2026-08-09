@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { issueService } from '../services/issueService';
 import type { Issue } from '../types';
 import IssueTable from '../components/IssueTable';
@@ -6,6 +7,10 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorState from '../components/ErrorState';
 
 export default function StaffIssues() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const statusParam = queryParams.get('status');
+
   const [issues, setIssues] = useState<Issue[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,12 +39,19 @@ export default function StaffIssues() {
     <div className="space-y-6 animate-fade-in-up">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-headline-lg font-bold text-primary">Assigned Issues</h1>
-          <p className="text-body-md text-on-surface-variant">View and manage all your assigned maintenance tasks.</p>
+          <h1 className="text-headline-lg font-bold text-primary">
+            {statusParam === 'RESOLVED' ? 'Resolved Issues' : 'Assigned Issues'}
+          </h1>
+          <p className="text-body-md text-on-surface-variant">
+            {statusParam === 'RESOLVED' ? 'View your resolved maintenance tasks.' : 'View and manage all your assigned maintenance tasks.'}
+          </p>
         </div>
       </div>
 
-      <IssueTable issues={issues} basePath="/staff/issues" />
+      <IssueTable 
+        issues={statusParam ? issues.filter(i => i.status === statusParam) : issues} 
+        basePath="/staff/issues" 
+      />
     </div>
   );
 }
