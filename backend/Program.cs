@@ -116,11 +116,12 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<FixItDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     
-    if (shouldMigrate)
+    // Automatically apply migrations in Production or if --migrate is passed
+    if (shouldMigrate || app.Environment.IsProduction())
     {
         try
         {
-            logger.LogInformation("Running EF Core migrations (--migrate flag detected)...");
+            logger.LogInformation("Running EF Core migrations...");
             db.Database.Migrate();
             logger.LogInformation("Migrations completed successfully.");
         }
