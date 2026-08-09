@@ -71,6 +71,18 @@ var uploadsRoot = app.Configuration["UploadSettings:UploadsRoot"]
     ?? Path.Combine(app.Environment.ContentRootPath, "uploads");
 Directory.CreateDirectory(uploadsRoot);
 
+// ── Auto-apply pending EF Core migrations ────────────────────────────────────
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FixItDbContext>();
+    try { db.Database.Migrate(); }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Migration failed.");
+    }
+}
+
 // ── Seed Database ─────────────────────────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
