@@ -1,7 +1,13 @@
 import axios from 'axios';
 
+let baseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5046/api';
+// Ensure the base URL correctly appends /api if the environment variable omits it
+if (baseUrl && !baseUrl.endsWith('/api') && !baseUrl.endsWith('/api/')) {
+  baseUrl = baseUrl.replace(/\/+$/, '') + '/api';
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5046/api',
+  baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
