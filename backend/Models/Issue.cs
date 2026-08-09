@@ -33,5 +33,14 @@ namespace backend.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? ResolvedAt { get; set; }
+
+        // Verification (Admin)
+        public int? VerifiedByUserId { get; set; }
+        public User? VerifiedBy { get; set; }
+        public DateTime? VerifiedAt { get; set; }
+        public string? ReworkNotes { get; set; }
+
+        // Evidence images
+        public ICollection<IssueEvidence> Evidence { get; set; } = new List<IssueEvidence>();
     }
 }

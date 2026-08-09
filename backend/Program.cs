@@ -15,20 +15,19 @@ builder.Services.AddDbContext<FixItDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        builder =>
+        b =>
         {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
+            b.AllowAnyOrigin()
+             .AllowAnyMethod()
+             .AllowAnyHeader();
         });
 });
 
 // Configure JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrEmpty(jwtKey))
-{
     throw new InvalidOperationException("JWT Key is not configured in appsettings.json");
-}
+
 var key = Encoding.ASCII.GetBytes(jwtKey);
 
 builder.Services.AddAuthentication(options =>
@@ -53,6 +52,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Increase max request body size for image uploads (20 MB)
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 20_000_000;
+});
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -61,19 +66,24 @@ builder.Services.AddControllers()
 
 var app = builder.Build();
 
+// ── Ensure uploads directory exists ──────────────────────────────────────────
+var uploadsRoot = app.Configuration["UploadSettings:UploadsRoot"]
+    ?? Path.Combine(app.Environment.ContentRootPath, "uploads");
+Directory.CreateDirectory(uploadsRoot);
+
+// ── Seed Database ─────────────────────────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    try
-    {
-        SeedData.Initialize(services);
-    }
+    try { SeedData.Initialize(services); }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred seeding the DB.");
     }
 }
+
+// NOTE: Do NOT serve /uploads as static files — all image access goes through authenticated API endpoints
 
 app.UseCors("AllowAll");
 app.UseAuthentication();

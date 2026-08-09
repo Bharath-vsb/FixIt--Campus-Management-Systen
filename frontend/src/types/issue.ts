@@ -2,6 +2,14 @@ export type IssueStatus = 'PENDING' | 'ASSIGNED' | 'IN_PROGRESS' | 'RESOLVED' | 
 export type PriorityLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type UrgencyLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
+export interface EvidenceItem {
+  id: number;
+  imageType: 'PROBLEM' | 'RESOLUTION';
+  url: string;
+  uploadedByName: string;
+  createdAt: string;
+}
+
 export interface Issue {
   id: number;
   title: string;
@@ -14,13 +22,20 @@ export interface Issue {
   priorityLevel: PriorityLevel;
   priorityFactors: string[];
   status: IssueStatus;
-  reportedBy: number;
+  reportedById: number;
   reportedByName: string;
-  assignedTo?: number;
+  assignedToId?: number;
   assignedToName?: string;
   createdAt: string;
   updatedAt: string;
   resolvedAt?: string;
+  // Verification
+  verifiedByName?: string;
+  verifiedAt?: string;
+  reworkNotes?: string;
+  // Evidence
+  problemEvidence: EvidenceItem[];
+  resolutionEvidence: EvidenceItem[];
 }
 
 export interface CreateIssueRequest {

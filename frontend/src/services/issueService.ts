@@ -22,13 +22,61 @@ export const issueService = {
     return response.data;
   },
 
-  create: async (data: any) => {
-    const response = await api.post('/issues', data);
+  /**
+   * Create a new issue with required problem photo.
+   * Uses FormData — DO NOT set Content-Type manually; Axios handles the multipart boundary.
+   */
+  create: async (data: {
+    title: string;
+    description: string;
+    category: string;
+    location: string;
+    urgency: string;
+    affectedPeople: number;
+  }, photo: File) => {
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('category', data.category);
+    formData.append('location', data.location);
+    formData.append('urgency', data.urgency);
+    formData.append('affectedPeople', String(data.affectedPeople));
+    formData.append('photo', photo);
+    // No manual Content-Type — Axios/browser sets multipart boundary automatically
+    const response = await api.post('/issues', formData);
     return response.data;
   },
 
   update: async (id: number, data: { status?: string; assignedToId?: number }) => {
     const response = await api.patch(`/issues/${id}`, data);
+    return response.data;
+  },
+
+  /**
+   * Staff uploads resolution photo for their assigned issue.
+   * Uses FormData — DO NOT set Content-Type manually.
+   */
+  uploadResolutionEvidence: async (issueId: number, photo: File) => {
+    const formData = new FormData();
+    formData.append('photo', photo);
+    // No manual Content-Type — Axios/browser handles multipart boundary
+    const response = await api.post(`/issues/${issueId}/evidence`, formData);
+    return response.data;
+  },
+
+  /**
+   * Admin verifies a resolved issue.
+   */
+  verify: async (issueId: number) => {
+    const response = await api.post<Issue>(`/issues/${issueId}/verify`);
+    return response.data;
+  },
+
+  /**
+   * Admin requests rework on a resolved issue with a mandatory reason.
+   */
+  requestRework: async (issueId: number, reason: string) => {
+    const response = await api.post<Issue>(`/issues/${issueId}/rework`, { reason });
     return response.data;
   },
 

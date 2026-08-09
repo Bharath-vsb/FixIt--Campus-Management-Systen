@@ -9,6 +9,7 @@ namespace backend.Data
 
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Issue> Issues { get; set; } = null!;
+        public DbSet<IssueEvidence> IssueEvidences { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Location> Locations { get; set; } = null!;
         public DbSet<Comment> Comments { get; set; } = null!;
@@ -47,6 +48,26 @@ namespace backend.Data
                 .WithMany()
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // IssueEvidence Relations
+            modelBuilder.Entity<IssueEvidence>()
+                .HasOne(e => e.Issue)
+                .WithMany(i => i.Evidence)
+                .HasForeignKey(e => e.IssueId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<IssueEvidence>()
+                .HasOne(e => e.UploadedBy)
+                .WithMany()
+                .HasForeignKey(e => e.UploadedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Issue.VerifiedBy Relation
+            modelBuilder.Entity<Issue>()
+                .HasOne(i => i.VerifiedBy)
+                .WithMany()
+                .HasForeignKey(i => i.VerifiedByUserId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

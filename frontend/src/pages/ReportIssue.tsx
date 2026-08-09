@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
+import PhotoUpload from '../components/PhotoUpload';
 import { issueService } from '../services/issueService';
 import type { UrgencyLevel } from '../types';
 import { useToast } from '../components/Toast';
@@ -19,10 +20,21 @@ export default function ReportIssue() {
   const [urgency, setUrgency] = useState<UrgencyLevel | ''>('');
   const [affectedPeople, setAffectedPeople] = useState<number | ''>('');
 
+  // Photo state
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPhotoError(null);
+
     if (!title || !category || !location || !description || !urgency || affectedPeople === '') {
       setError('Please fill in all required fields.');
+      return;
+    }
+
+    if (!photo) {
+      setPhotoError('Please upload a photo of the issue before submitting.');
       return;
     }
 
@@ -30,14 +42,17 @@ export default function ReportIssue() {
     setError(null);
 
     try {
-      const response = await issueService.create({
-        title,
-        category,
-        location,
-        description,
-        urgency: urgency as UrgencyLevel,
-        affectedPeople: Number(affectedPeople),
-      });
+      const response = await issueService.create(
+        {
+          title,
+          category,
+          location,
+          description,
+          urgency: urgency as UrgencyLevel,
+          affectedPeople: Number(affectedPeople),
+        },
+        photo
+      );
 
       if (response.possibleDuplicate) {
         showToast('Issue submitted, but marked as a possible duplicate.', 'info');
@@ -47,7 +62,8 @@ export default function ReportIssue() {
 
       navigate(`/student/issues/${response.issue.id}`);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to report issue. Please try again.');
+      const msg = err.response?.data?.message || err.response?.data || 'Failed to report issue. Please try again.';
+      setError(typeof msg === 'string' ? msg : 'Failed to report issue.');
       setIsSubmitting(false);
     }
   };
@@ -106,6 +122,8 @@ export default function ReportIssue() {
                 options={[
                   { value: 'Hostel A', label: 'Hostel A' },
                   { value: 'Hostel B', label: 'Hostel B' },
+                  { value: 'Boys Hostel', label: 'Boys Hostel' },
+                  { value: 'Girls Hostel', label: 'Girls Hostel' },
                   { value: 'Library', label: 'Main Library' },
                   { value: 'Engineering Block', label: 'Engineering Block' },
                   { value: 'Science Block', label: 'Science Block' },
@@ -154,6 +172,21 @@ export default function ReportIssue() {
               />
             </div>
 
+            {/* Photo Evidence — REQUIRED */}
+            <div className="pt-2 border-t border-outline-variant">
+              <PhotoUpload
+                label="📷 Photo Evidence (Required)"
+                hint="Take or upload a clear photo of the issue so the maintenance team can understand the problem."
+                currentFile={photo}
+                onFileSelected={(f) => {
+                  setPhoto(f);
+                  if (f) setPhotoError(null);
+                }}
+                error={photoError}
+                captureCamera
+              />
+            </div>
+
             <div className="pt-4 border-t border-outline-variant flex justify-end gap-4">
               <button
                 type="button"
@@ -195,6 +228,30 @@ export default function ReportIssue() {
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[16px] text-[#10B981]">check_circle</span>
                 Duplicate detection
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant">
+            <div className="flex items-center gap-2 text-primary font-bold mb-3">
+              <span className="material-symbols-outlined">photo_camera</span>
+              Photo Evidence
+            </div>
+            <p className="text-body-md text-on-surface-variant mb-3">
+              A clear photo helps the maintenance team understand the problem immediately — speeding up resolution.
+            </p>
+            <div className="text-label-sm text-on-surface space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[16px] text-[#10B981]">check_circle</span>
+                Faster assignment
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[16px] text-[#10B981]">check_circle</span>
+                Better diagnosis
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[16px] text-[#10B981]">check_circle</span>
+                Admin verification
               </div>
             </div>
           </div>

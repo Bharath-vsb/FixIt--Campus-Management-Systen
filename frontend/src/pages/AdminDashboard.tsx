@@ -41,6 +41,8 @@ export default function AdminDashboard() {
 
   // Sort to show highest priority pending issues first
   const criticalPending = issues.filter(i => i.priorityLevel === 'CRITICAL' || i.priorityLevel === 'HIGH').slice(0, 5);
+  // Awaiting verification = RESOLVED but not yet VERIFIED
+  const awaitingVerification = issues.filter(i => i.status === 'RESOLVED').length;
 
   return (
     <div className="space-y-8 animate-fade-in-up">
@@ -63,12 +65,25 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-6">
         <StatCard label="Total Open" value={stats.totalIssues} icon="list_alt" />
         <StatCard label="Critical" value={stats.criticalIssues} borderColor="border-error" icon="warning" iconColor="text-error" />
         <StatCard label="Pending Triage" value={stats.pendingIssues} borderColor="border-primary" icon="rule" />
         <StatCard label="In Progress" value={stats.inProgressIssues} borderColor="border-[#f59e0b]" icon="engineering" />
         <StatCard label="Resolved Today" value={stats.resolvedIssues} borderColor="border-[#10b981]" icon="task_alt" />
+        <div
+          onClick={() => navigate('/admin/issues?status=RESOLVED')}
+          className="cursor-pointer hover:scale-105 transition-transform"
+          title="Click to view issues awaiting verification"
+        >
+          <StatCard
+            label="Awaiting Verification"
+            value={awaitingVerification}
+            borderColor="border-[#6366F1]"
+            icon="verified"
+            iconColor="text-[#6366F1]"
+          />
+        </div>
       </div>
 
       {/* Main Content Area */}

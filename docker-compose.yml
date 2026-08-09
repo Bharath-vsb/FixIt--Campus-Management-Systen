@@ -22,6 +22,9 @@ services:
       - Jwt__Key=ThisIsASecretKeyForJwtTokensThatIsLongEnoughToWorkProperly
       - Jwt__Issuer=FixItApp
       - Jwt__Audience=FixItUsers
+      - UploadSettings__UploadsRoot=/app/uploads
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       - db
 
@@ -36,3 +39,4 @@ services:
 
 volumes:
   pgdata:
+  uploads_data:
